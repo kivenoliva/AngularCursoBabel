@@ -20,8 +20,15 @@ angular.module("moviedb").controller("MenuController",
 				return "";
 			}
 
-		}
-
+		};
+		
+		//Scope Watchers
+		$scope.$watch("model.selectedItem", function(newValue, oldValue){
+			//Emitimos un evento para que se entere AppController 
+			//de que ha cambiado la opción del menú seleccionado
+			$scope.$emit("OnMenuChange", newValue);
+		});
+		
 	}]
 
 );
