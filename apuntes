@@ -1,0 +1,6 @@
+--- Cuando quieras modificar el DOM, lo haces en directivas,
+una regla muy importante de Angular es que el DOM sólo se modifica
+en una directiva, NO se modifica en controladores , ni en ningún otro
+sitio ******IMPORTANTE*******.
+
+--- sólo trabajaremos con 4 cosas, controladores, filtros, directivas, servicios
