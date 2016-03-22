@@ -9,3 +9,5 @@ style.css
 
 #server.py cosas del servidor
 db/ 
+
+dist/

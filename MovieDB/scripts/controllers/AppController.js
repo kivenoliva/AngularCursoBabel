@@ -1,5 +1,14 @@
 angular.module("moviedb").controller("AppController",
-	["$scope", function($scope){
+	["$scope", "$location", function($scope, $location){
+
+
+		var controller = this;
+		// Controller propierties
+		controller.titles = {
+			"/movies": "Movies List",
+			"/series": "Series List",
+			"/people": "People List"
+		};
 
 		// Model init
 		$scope.model = {
@@ -7,8 +16,8 @@ angular.module("moviedb").controller("AppController",
 		}	
 		
 		// Scope event listener
-		$scope.$on("OnMenuChange", function(evento, data){
-			$scope.model.title = data;
+		$scope.$on("$locationChangeSuccess", function(evt, locationRoute){
+			$scope.model.title = controller.titles[$location.path()] || "404 Not Found";
 		});
 
 	
