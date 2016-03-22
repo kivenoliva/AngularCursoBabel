@@ -1,3 +1,6 @@
+# dist
+dist/
+
 # Node modules
 node_modules/
 
@@ -10,4 +13,6 @@ style.css
 #server.py cosas del servidor
 db/ 
 
+# dist
 dist/
+

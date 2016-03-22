@@ -1,8 +1,33 @@
 angular.module("moviedb").controller("MoviesListController",
-	["$scope", function($scope){
+	["$scope", "$log", "MoviesService", function($scope, $log, MoviesService){
 
-		$scope.name = "Joseba";
+		// Scope init
+		$scope.uiState = "loading";
 
+		// Scope model init
+		$scope.model = [];
+
+		// Controller start
+		$scope.uiState = "loading";
+		MoviesService.getMovies().then(
+
+			//primero siempre el succes
+			function(data){
+				$scope.model = data;
+
+				if(data.length == 0){
+					$scope.uiState = "blank";
+				}else{
+					$scope.uiState = "ideal";
+				}
+			},
+
+			//segundo si ha habido error
+			function(data){
+				$log.error("Error", data);
+				$scope.uiState = "error";
+			}
+		);
 	}]
 
 );
