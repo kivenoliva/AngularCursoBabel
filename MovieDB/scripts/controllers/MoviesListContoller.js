@@ -12,10 +12,10 @@ angular.module("moviedb").controller("MoviesListController",
 		MoviesService.getMovies().then(
 
 			//primero siempre el succes
-			function(data){
-				$scope.model = data;
+			function(response){
+				$scope.model = response.data;
 
-				if(data.length == 0){
+				if(response.data.length == 0){
 					$scope.uiState = "blank";
 				}else{
 					$scope.uiState = "ideal";
@@ -23,8 +23,8 @@ angular.module("moviedb").controller("MoviesListController",
 			},
 
 			//segundo si ha habido error
-			function(data){
-				$log.error("Error", data);
+			function(response){
+				$log.error("Error", response);
 				$scope.uiState = "error";
 			}
 		);
