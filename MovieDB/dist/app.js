@@ -31677,10 +31677,10 @@ angular.module("moviedb").controller("MenuController",
 		MoviesService.getMovies().then(
 
 			//primero siempre el succes
-			function(response){
-				$scope.model = response.data;
+			function(data){
+				$scope.model = data;
 
-				if(response.data.length == 0){
+				if(data.length == 0){
 					$scope.uiState = "blank";
 				}else{
 					$scope.uiState = "ideal";
@@ -31688,8 +31688,8 @@ angular.module("moviedb").controller("MenuController",
 			},
 
 			//segundo si ha habido error
-			function(response){
-				$log.error("Error", response);
+			function(data){
+				$log.error("Error", data);
 				$scope.uiState = "error";
 			}
 		);
