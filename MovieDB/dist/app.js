@@ -35281,16 +35281,16 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 ;//Defino el módulo "moviedb"
 angular.module("moviedb", ['ngRoute']).config(
-	["$routeProvider", function($routeProvider){
+	["$routeProvider", "paths", function($routeProvider, paths){
 
 		//Configuro las url de la aplicación
-		$routeProvider.when("/movies", {
+		$routeProvider.when(paths.movies, {
 			templateUrl: "views/MoviesList.html"
-		}).when("/", {
+		}).when(paths.home, {
 			redirectTo: "/movies"
-		}).when("/series", {
+		}).when(paths.series, {
 			templateUrl: "views/SeriesList.html"
-		}).when("/people", {
+		}).when(paths.people, {
 			templateUrl: "views/PeopleList.html"
 		}).otherwise({
 			templateUrl: "views/404.html"
@@ -35301,16 +35301,16 @@ angular.module("moviedb", ['ngRoute']).config(
 
 );
 ;angular.module("moviedb").controller("AppController",
-	["$scope", "$location", function($scope, $location){
+	["$scope", "$location", "paths", function($scope, $location, paths){
 
 
 		var controller = this;
 		// Controller propierties
-		controller.titles = {
-			"/movies": "Movies List",
-			"/series": "Series List",
-			"/people": "People List"
-		};
+		controller.titles = {};
+		controller.titles[paths.movies] = "Movies List";
+		controller.titles[paths.series] = "Series List";
+		controller.titles[paths.people] = "People List";
+			
 
 		// Model init
 		$scope.model = {
@@ -35328,12 +35328,14 @@ angular.module("moviedb", ['ngRoute']).config(
 );
 ;//En el módulo moviedb, defino el controlador
 angular.module("moviedb").controller("MenuController",
-	["$scope", "$location", function($scope, $location){
+	["$scope", "$location", "paths", function($scope, $location, paths){
 
 		//Scope init
 		$scope.model = {
-			selectedItem: "movies"
+			selectedItem: paths.movies
 		};
+
+		$scope.paths = paths;
 
 		//Scope methods
 		$scope.getClassForItem = function(data){
@@ -35438,3 +35440,9 @@ angular.module("moviedb").controller("MenuController",
 
 
 }]);
+;angular.module("moviedb").constant("paths", {
+	home:"/",
+	movies: "/movies",
+	series: "/series",
+	people: "/people"
+});
