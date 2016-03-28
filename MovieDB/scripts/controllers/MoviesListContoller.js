@@ -1,5 +1,5 @@
 angular.module("moviedb").controller("MoviesListController",
-	["$scope", "$log", "MoviesService", "URL", "paths", function($scope, $log, MoviesService, URL, paths){
+	["$scope", "$log", "APIClient", "URL", "paths", function($scope, $log, APIClient, URL, paths){
 
 		// Scope init
 		$scope.uiState = "loading";
@@ -13,7 +13,7 @@ angular.module("moviedb").controller("MoviesListController",
 
 		// Controller start
 		$scope.uiState = "loading";
-		MoviesService.getMovies().then(
+		APIClient.getMovies().then(
 
 			//primero siempre el succes
 			function(data){

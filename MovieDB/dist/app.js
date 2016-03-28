@@ -36127,7 +36127,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 })(window, window.angular);
 
 ;//Defino el módulo "moviedb"
-angular.module("moviedb", ['ngRoute', 'URL']).config(
+angular.module("moviedb", ['ngRoute', 'URL', "ngSanitize"]).config(
 	["$routeProvider", "paths", function($routeProvider, paths){
 
 		//Configuro las url de la aplicación
@@ -36209,8 +36209,8 @@ angular.module("moviedb").controller("MenuController",
 
 );
 ;angular.module("moviedb").controller("MovieDetailController",
-	["$scope", "MoviesService", "$routeParams", "$location", "paths",
-	function($scope, MoviesService, $routeParams ,$location, paths){
+	["$scope", "APIClient", "$routeParams", "$location", "paths",
+	function($scope, APIClient, $routeParams ,$location, paths){
 
 		// Scope init
 		$scope.uiState = "loading";
@@ -36218,7 +36218,7 @@ angular.module("moviedb").controller("MenuController",
 
 		
 		// Controller init
-		MoviesService.getMovie($routeParams.id).then(
+		APIClient.getMovie($routeParams.id).then(
 
 
 			//pelicula encontrada
@@ -36242,7 +36242,7 @@ angular.module("moviedb").controller("MenuController",
 
 );
 ;angular.module("moviedb").controller("MoviesListController",
-	["$scope", "$log", "MoviesService", "URL", "paths", function($scope, $log, MoviesService, URL, paths){
+	["$scope", "$log", "APIClient", "URL", "paths", function($scope, $log, APIClient, URL, paths){
 
 		// Scope init
 		$scope.uiState = "loading";
@@ -36256,7 +36256,7 @@ angular.module("moviedb").controller("MenuController",
 
 		// Controller start
 		$scope.uiState = "loading";
-		MoviesService.getMovies().then(
+		APIClient.getMovies().then(
 
 			//primero siempre el succes
 			function(data){
@@ -36278,6 +36278,30 @@ angular.module("moviedb").controller("MenuController",
 	}]
 
 );
+;angular.module("moviedb").controller("SeriesListController",
+	["$scope", "APIClient", "$routeParams", "$location", "paths",
+	function($scope, APIClient, $routeParams ,$location, paths){
+
+
+
+	}]
+
+
+);
+;angular.module("moviedb").directive("mediaItemList", function(){
+
+	return {
+
+		restrict:"AE",
+		scope: {
+			model:"=items",
+			getDetailUrl:"="
+		},
+		templateUrl:"views/mediaItemList.html"
+	};
+
+
+});
 ;angular.module("moviedb").filter("ago", [function(){
 
 	return function(text){
@@ -36307,7 +36331,7 @@ angular.module("moviedb").controller("MenuController",
 	}
 
 }]);
-;angular.module("moviedb").service("MoviesService", 
+;angular.module("moviedb").service("APIClient", 
 	["$http", "$q", "api_paths", "URL", function($http, $q, api_paths, URL){
 
 
@@ -36344,6 +36368,18 @@ angular.module("moviedb").controller("MenuController",
 
 		};
 
+		this.getSeries = function(){
+			return this.apiRequest(api_paths.series);
+			
+		};
+
+		this.getSerie = function(movieId){
+			var url = URL.resolve(api_paths.serieDetail, {id: serieId});
+			return this.apiRequest(url);
+
+
+		};
+
 	}]
 );
 ;angular.module("URL", []).service("URL", ["$log", function($log){
@@ -36373,7 +36409,9 @@ angular.module("moviedb").controller("MenuController",
 }]);
 ;angular.module("moviedb").value("api_paths", {
 	movies: "/api/movies/",
-	movieDetail: "/api/movies/:id"
+	movieDetail: "/api/movies/:id",
+	series: "api/series/",
+	serieDetail: "/api/series/:id"
 });
 ;angular.module("moviedb").constant("paths", {
 	home:"/",
