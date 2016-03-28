@@ -15,6 +15,7 @@ angular.module("moviedb").controller("MovieDetailController",
 			function(movie){
 				$scope.model = movie;
 				$scope.uiState = 'ideal';
+				$scope.$emit("ChangeTitle", $scope.model.title);
 
 			},
 
