@@ -5,7 +5,7 @@ angular.module("moviedb").directive("mediaItemList", function(){
 		restrict:"AE",
 		scope: {
 			model:"=items",
-			getDetailUrl:"="
+			getDetailUrl:"&"
 		},
 		templateUrl:"views/mediaItemList.html"
 	};

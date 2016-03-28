@@ -36137,10 +36137,14 @@ angular.module("moviedb", ['ngRoute', 'URL', "ngSanitize"]).config(
 			redirectTo: "/movies"
 		}).when(paths.series, {
 			templateUrl: "views/SeriesList.html"
+		}).when(paths.serieDetail, {
+			controller: "SerieDetailController",
+			templateUrl: "views/MediaItemDetail.html"
 		}).when(paths.people, {
 			templateUrl: "views/PeopleList.html"
 		}).when(paths.movieDetail, {
-			templateUrl: "views/MovieDetail.html"
+			controller: "MovieDetailController",
+			templateUrl: "views/MediaItemDetail.html"
 		}).otherwise({
 			templateUrl: "views/404.html"
 		})
@@ -36278,16 +36282,92 @@ angular.module("moviedb").controller("MenuController",
 	}]
 
 );
-;angular.module("moviedb").controller("SeriesListController",
+;angular.module("moviedb").controller("SerieDetailController",
 	["$scope", "APIClient", "$routeParams", "$location", "paths",
 	function($scope, APIClient, $routeParams ,$location, paths){
 
+		// Scope init
+		$scope.uiState = "loading";
+		$scope.model = {};
+
+		
+		// Controller init
+		APIClient.getSerie($routeParams.id).then(
+
+
+			//pelicula encontrada
+			function(serie){
+				$scope.model = serie;
+				$scope.uiState = 'ideal';
+				$scope.$emit("ChangeTitle", $scope.model.title);
+
+			},
+
+			//fallo
+			function(error){
+				$location.url(paths.notFound);
+			}
+
+		);
 
 
 	}]
 
 
 );
+;angular.module("moviedb").controller("SeriesListController",
+	["$scope", "APIClient", "$routeParams", "$location", "paths", "URL",
+	function($scope, APIClient, $routeParams ,$location, paths, URL){
+
+		// Scope init
+		$scope.uiState = "loading";
+		$scope.model = [];
+		$scope.url = URL.resolve;
+
+		// Scope methods
+		$scope.getSerieDetailURL = function(serie){
+			return URL.resolve(paths.serieDetail, {id:serie.id});
+		}
+
+		// Controller start
+		$scope.uiState = "loading";
+		APIClient.getSeries().then(
+
+			//primero siempre el succes
+			function(data){
+				$scope.model = data;
+
+				if(data.length == 0){
+					$scope.uiState = "blank";
+				}else{
+					$scope.uiState = "ideal";
+				}
+			},
+
+			//segundo si ha habido error
+			function(data){
+				$log.error("Error", data);
+				$scope.uiState = "error";
+			}
+		);
+
+	}]
+
+
+);
+;angular.module("moviedb").directive("mediaItem", function(){
+
+	return {
+
+		restrict:"AE",
+		scope:{
+			model:"=item"
+		},
+		templateUrl:"views/mediaItem.html"
+	};
+
+
+});
 ;angular.module("moviedb").directive("mediaItemList", function(){
 
 	return {
@@ -36295,7 +36375,7 @@ angular.module("moviedb").controller("MenuController",
 		restrict:"AE",
 		scope: {
 			model:"=items",
-			getDetailUrl:"="
+			getDetailUrl:"&"
 		},
 		templateUrl:"views/mediaItemList.html"
 	};
@@ -36309,6 +36389,21 @@ angular.module("moviedb").controller("MenuController",
 	}
 
 }]);
+;angular.module("moviedb").filter("join",
+    ["$log", function($log){
+        return function(arr, sep){
+            var items = arr || null;
+            var separator = sep || ", ";
+            if (items == null)
+                return "";
+            if (typeof arr.join === "undefined") {
+                $log.error("The value passed to the filter 'join' must be an array.")
+                return "";
+            }
+            return arr.join(separator);
+        };
+    }]
+);
 ;angular.module("moviedb").filter("schoolrating", [function(){
 
 	return function(rating, mode){
@@ -36373,7 +36468,7 @@ angular.module("moviedb").controller("MenuController",
 			
 		};
 
-		this.getSerie = function(movieId){
+		this.getSerie = function(serieId){
 			var url = URL.resolve(api_paths.serieDetail, {id: serieId});
 			return this.apiRequest(url);
 
@@ -36410,7 +36505,7 @@ angular.module("moviedb").controller("MenuController",
 ;angular.module("moviedb").value("api_paths", {
 	movies: "/api/movies/",
 	movieDetail: "/api/movies/:id",
-	series: "api/series/",
+	series: "/api/series/",
 	serieDetail: "/api/series/:id"
 });
 ;angular.module("moviedb").constant("paths", {
@@ -36418,6 +36513,7 @@ angular.module("moviedb").controller("MenuController",
 	movies: "/movies",
 	movieDetail: "/movies/:id",
 	series: "/series",
+	serieDetail: "/series/:id",
 	people: "/people",
 	notFound:"/sorry"
 });
