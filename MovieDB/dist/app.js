@@ -36135,6 +36135,8 @@ angular.module("moviedb", ['ngRoute', 'URL', "ngSanitize"]).config(
 			templateUrl: "views/MoviesList.html"
 		}).when(paths.home, {
 			redirectTo: "/movies"
+		}).when(paths.newMovie, {
+			templateUrl: "views/NewMovie.html"
 		}).when(paths.series, {
 			templateUrl: "views/SeriesList.html"
 		}).when(paths.serieDetail, {
@@ -36243,6 +36245,37 @@ angular.module("moviedb").controller("MenuController",
 
 	}]
 
+
+);
+;angular.module("moviedb").controller("MovieFormController",
+	["$scope", "APIClient", function($scope, APIClient){
+
+		//Scope init
+		$scope.model = {};
+		$scope.succesMessage = null;
+		$scope.errorMessage = null;
+
+		//Scope methods
+		$scope.saveMovie = function(){
+
+			APIClient.createMovie($scope.model).then(
+
+				function(movie){
+					console.log("PELICULA GUARDADA", movie);
+					$scope.succesMessage = true;
+					$scope.model = {};
+					$scope.movieForm.$setPristine();
+				},
+
+				function(error){
+					console.log("ERROR AL GUARDAR", error);
+					$scope.errorMessage = true;
+
+				}
+			)
+		}
+		
+	}]
 
 );
 ;angular.module("moviedb").controller("MoviesListController",
@@ -36355,6 +36388,31 @@ angular.module("moviedb").controller("MenuController",
 
 
 );
+;angular.module("moviedb").directive("badwords", function(){
+
+	return {
+		require:"ngModel",
+		link:function($scope, elem, attrs, cntrl){
+
+			var badwords = ["fuck", "shit"];
+			cntrl.$validators.badwords = function(modelValue, viewValue){
+				var rawWords = modelValue || "";
+				var words = rawWords.split(" ");
+				for (var i in badwords){
+					var badword = badwords[i];
+					if(words.indexOf(badword) >= 0){
+						cntrl.badword = badword;
+						return false;
+					}
+				}
+				cntrl.badword = "";
+				return true;
+			};
+		}
+	};
+
+
+});
 ;angular.module("moviedb").directive("mediaItem", function(){
 
 	return {
@@ -36429,8 +36487,6 @@ angular.module("moviedb").controller("MenuController",
 ;angular.module("moviedb").service("APIClient", 
 	["$http", "$q", "api_paths", "URL", function($http, $q, api_paths, URL){
 
-
-
 		this.apiRequest = function(url){
 
 			var deferred = $q.defer();
@@ -36447,7 +36503,6 @@ angular.module("moviedb").controller("MenuController",
 			);
 
 			return deferred.promise;
-
 		}
 
 
@@ -36471,7 +36526,23 @@ angular.module("moviedb").controller("MenuController",
 		this.getSerie = function(serieId){
 			var url = URL.resolve(api_paths.serieDetail, {id: serieId});
 			return this.apiRequest(url);
+		};
 
+		this.createMovie = function(movie){
+			var deferred = $q.defer();
+			$http.post(api_paths.movies, movie).then(
+
+				function(response){
+					deferred.resolve(response.data);
+				},
+
+				function(response){
+					deferred.reject(response.data);
+				}
+
+			);
+
+			return deferred.promise;
 
 		};
 
@@ -36515,5 +36586,6 @@ angular.module("moviedb").controller("MenuController",
 	series: "/series",
 	serieDetail: "/series/:id",
 	people: "/people",
-	notFound:"/sorry"
+	notFound:"/sorry",
+	newMovie: "/movies/new"
 });

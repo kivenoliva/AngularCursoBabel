@@ -1,0 +1,108 @@
+<div ng-controller="MovieFormController">
+    <h1>New Movie</h1>
+    
+    <div class="alert alert-success" ng-show="succesMessage">
+        Pelicula creada con éxito.
+    </div>
+
+    <div class="alert alert-error" ng-show="errorMessage">
+        Error al guardar película.
+    </div>
+
+
+    <form name="movieForm" novalidate class="form-horizontal" ng-submit="saveMovie()">
+
+        <div class="form-group" ng-class="{'has-success':movieForm.title.$valid,'has-error':movieForm.title.$invalid}">
+            <label for="title" class="col-sm-2 control-label">Title</label>
+            <div class="col-sm-10">
+                <input type="text" name="title" ng-model="model.title" required class="form-control">
+
+                <div ng-show="movieForm.title.$dirty && movieForm.title.$error.required"class="alert alert-danger alert-dismissible" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>The title is required</strong> 
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="form-group" ng-class="{'has-success':movieForm.poster_url.$valid,'has-error':movieForm.poster_url.$invalid}">
+            <label for="poster_url" class="col-sm-2 control-label">Poster URL</label>
+            <div class="col-sm-10">
+                <input type="url" name="poster_url" ng-model="model.poster_url" required class="form-control">
+
+                <div ng-show="movieForm.poster_url.$dirty && movieForm.poster_url.$error.required"class="alert alert-danger alert-dismissible" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>The poster URL is required</strong> 
+                </div>
+
+                <div ng-show="movieForm.poster_url.$dirty && movieForm.poster_url.$error.url"class="alert alert-danger alert-dismissible" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>Please, write a correct URL</strong> 
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success':movieForm.rating.$valid,'has-error':movieForm.rating.$invalid}">
+            <label for="rating" class="col-sm-2 control-label">Rating</label>
+            <div class="col-sm-10">
+                <input type="number" name="rating" ng-model="model.rating" required class="form-control" max="10" min="0">
+
+                <div ng-show="movieForm.rating.$dirty && movieForm.rating.$error.required"class="alert alert-danger alert-dismissible" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>The rating is required</strong> 
+                </div>
+
+                <div ng-show="movieForm.rating.$dirty && (movieForm.rating.$error.number || movieForm.rating.$error.min || movieForm.rating.$error.max)" class="alert alert-danger alert-dismissible)" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>The rating must be a number between 0 and 10</strong> 
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success':movieForm.release_date.$valid,'has-error':movieForm.release_date.$invalid}">
+            <label for="release_date" class="col-sm-2 control-label">Release date</label>
+            <div class="col-sm-10">
+                <input type="date" name="release_date" ng-model="model.release_date" required class="form-control">
+
+                <div ng-show="movieForm.release_date.$dirty && movieForm.release_date.$error.required"class="alert alert-danger alert-dismissible" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>The date is required</strong> 
+                </div>
+
+                <div ng-show="movieForm.release_date.$dirty && (movieForm.release_date.$error.date)" class="alert alert-danger alert-dismissible)" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>Please, write a correct date</strong> 
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success':movieForm.overview.$valid,'has-error':movieForm.overview.$invalid}">
+            <label for="overview" class="col-sm-2 control-label">Overview</label>
+            <div class="col-sm-10">
+                <textarea badwords name="overview" ng-model="model.overview" class="form-control" required rows="5"></textarea>
+
+                <div ng-show="movieForm.overview.$dirty && movieForm.overview.$error.required"class="alert alert-danger alert-dismissible" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>The date is required</strong> 
+                </div>
+
+                <div ng-show="movieForm.overview.$dirty && movieForm.overview.$error.badwords"class="alert alert-danger alert-dismissible" role="alert">
+                  <button  type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <strong>The word "{{ movieForm.overview.badword }}" is not allowed.</strong> 
+                </div>
+
+            </div>
+        </div>
+
+        <div>
+            <button class="btn btn-primary pull-right" type="submit" ng-disabled="movieForm.$invalid">Crear</button>
+        </div>
+    </form>
+
+
+
+
+</div>
+
+

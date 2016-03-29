@@ -1,8 +1,6 @@
 angular.module("moviedb").service("APIClient", 
 	["$http", "$q", "api_paths", "URL", function($http, $q, api_paths, URL){
 
-
-
 		this.apiRequest = function(url){
 
 			var deferred = $q.defer();
@@ -19,7 +17,6 @@ angular.module("moviedb").service("APIClient",
 			);
 
 			return deferred.promise;
-
 		}
 
 
@@ -43,7 +40,23 @@ angular.module("moviedb").service("APIClient",
 		this.getSerie = function(serieId){
 			var url = URL.resolve(api_paths.serieDetail, {id: serieId});
 			return this.apiRequest(url);
+		};
 
+		this.createMovie = function(movie){
+			var deferred = $q.defer();
+			$http.post(api_paths.movies, movie).then(
+
+				function(response){
+					deferred.resolve(response.data);
+				},
+
+				function(response){
+					deferred.reject(response.data);
+				}
+
+			);
+
+			return deferred.promise;
 
 		};
 

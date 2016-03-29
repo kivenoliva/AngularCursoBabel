@@ -7,6 +7,8 @@ angular.module("moviedb", ['ngRoute', 'URL', "ngSanitize"]).config(
 			templateUrl: "views/MoviesList.html"
 		}).when(paths.home, {
 			redirectTo: "/movies"
+		}).when(paths.newMovie, {
+			templateUrl: "views/NewMovie.html"
 		}).when(paths.series, {
 			templateUrl: "views/SeriesList.html"
 		}).when(paths.serieDetail, {
